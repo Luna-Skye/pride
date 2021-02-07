@@ -5,9 +5,6 @@
     ------------------------------------------------------- -->
     <q-header elevated>
       <q-toolbar>
-        <q-avatar>
-          <img src="https://cdn.discordapp.com/avatars/298586684038184960/9fe277366a18d5e71d8998ec4cc15360.png?size=2048">
-        </q-avatar>
         <q-toolbar-title class="gt-xs">Pride App</q-toolbar-title>
 
         <q-space />
