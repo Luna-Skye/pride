@@ -1,6 +1,8 @@
 <template>
   <q-layout view="hHh Lpr lff">
-    <!-- APP HEADER -->
+    <!---------------------------------------------------------
+    ----------------------- APP HEADER ------------------------
+    ------------------------------------------------------- -->
     <q-header elevated>
       <q-toolbar>
         <q-avatar>
@@ -22,6 +24,9 @@
       </q-toolbar>
     </q-header>
 
+    <!---------------------------------------------------------
+    ----------------------- APP CONTENT -----------------------
+    ------------------------------------------------------- -->
     <q-page-container>
       <router-view class="q-pb-lg" />
     </q-page-container>
@@ -38,6 +43,9 @@ export default defineComponent({
         {
           label: 'Play',
           to: '/play'
+        }, {
+          label: 'Tryouts',
+          to: '/tryouts'
         }
       ]
     }

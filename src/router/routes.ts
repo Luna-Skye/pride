@@ -10,6 +10,10 @@ const routes: RouteRecordRaw[] = [
     path: '/play',
     component: () => import('pages/Play.vue')
   },
+  {
+    path: '/tryouts',
+    component: () => import('pages/Tryouts.vue')
+  },
 
   //* ERROR 404 PAGE
   {
