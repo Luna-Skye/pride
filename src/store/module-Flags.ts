@@ -146,7 +146,7 @@ const ModuleFlags: Module<FlagsStateInterface, StateInterface> = {
         },
         {
           name: 'Nonbinary',
-          tags: ['enby', 'nb'],
+          tags: ['enby', 'nb', 'non-binary'],
           type: 'gender',
           elements: ['#F6EC31', '#F7F7F7', '#9556C9', '#000000']
         },
