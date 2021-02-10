@@ -21,6 +21,8 @@
     <!-- ONGOING GAME -->
     <div id="ongoing" v-if="$store.state.FlagGayme.gameState === 'ONGOING'">
       <FlagDisplay :flag="getFlag($store.state.FlagGayme.current.flag)" />
+
+      <!-- INPUT -->
       <q-input
         square
         outlined
@@ -28,8 +30,24 @@
         v-model="flagNameInput"
         @keypress.enter="submitAnswer($event.target.value)"
       />
+
+      <!-- IN GAME ACTIONS -->
+      <div class="row">
+        <q-btn
+          unelevated
+          class="no-border-radius col"
+          @click="$store.dispatch('FlagGayme/randomizeFlag')"
+        >SKIP</q-btn>
+
+        <q-btn
+          unelevated
+          class="no-border-radius col"
+          @click="$store.dispatch('FlagGayme/setGameState', 'MAINMENU')"
+        >QUIT</q-btn>
+      </div>
     </div>
 
+    <!-- GAME OVER -->
     <div id="game-over" v-if="$store.state.FlagGayme.gameState === 'GAMEOVER'">
       <p>Well done. Ya did it.</p>
       <q-btn
