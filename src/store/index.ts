@@ -1,29 +1,25 @@
 import { store } from 'quasar/wrappers'
 import { createStore } from 'vuex'
 
-// import example from './module-example'
-// import { ExampleStateInterface } from './module-example/state';
+//* -----------------------------------------------------------
+//  EXTERNAL MODULE IMPORTS -----------------------------------
+import Flags, { FlagsStateInterface } from './module-Flags'
+import FlagGayme, { FlagGaymeStateInterface } from './module-FlagGayme'
 
-/*
- * If not building with SSR mode, you can
- * directly export the Store instantiation;
- *
- * The function below can be async too; either use
- * async/await or return a Promise which resolves
- * with the Store instance.
- */
-
+//* -----------------------------------------------------------
+//  CORE STATE INTERFACE --------------------------------------
 export interface StateInterface {
-  // Define your own store structure, using submodules if needed
-  // example: ExampleStateInterface;
-  // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
-  example: unknown;
+  Flags: FlagsStateInterface;
+  FlagGayme: FlagGaymeStateInterface;
 }
 
-export default store(function (/* { ssrContext } */) {
+//* -----------------------------------------------------------
+//  CORE STORE OBJECT -----------------------------------------
+export default store(() => {
   const Store = createStore<StateInterface>({
     modules: {
-      // example
+      Flags,
+      FlagGayme
     },
 
     // enable strict mode (adds overhead!)
