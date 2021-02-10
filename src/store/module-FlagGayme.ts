@@ -136,9 +136,7 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
     //* GAME STATE MANAGEMENT -------------------------------------------------
     //  Managing GameState & Current Values -----------------------------------
     setGameState (state, payload: GameState): void { state.gameState = payload },
-    setCurrent (state, payload: GameCurrent): void {
-      state.current = payload
-    },
+    setCurrent (state, payload: GameCurrent): void { state.current = payload },
 
     //* SET FLAG BY STRING ----------------------------------------------------
     //  Set Current Flag to Defined String ------------------------------------
@@ -175,16 +173,14 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
           break
         case 'ONGOING': //*  CURRENTLY ONGOING GAME ---------------------------
           // Reset Current Values
-          commit('setCurrent', _.merge(
-            _.cloneDeep(state.current),
-            {
-              flag: 'Progress',
-              score: 0,
-              time: getters.difficulty.StartTime,
-              history: [],
-              stats: {}
-            }
-          ))
+          commit('setCurrent', {
+            difficulty: state.current.difficulty,
+            flag: 'Progress',
+            score: 0,
+            time: getters.difficulty.StartTime,
+            history: [],
+            stats: {}
+          })
           void dispatch('setTimer', true)
           break
         case 'GAMEOVER': //* GAME OVER STATE ----------------------------------
