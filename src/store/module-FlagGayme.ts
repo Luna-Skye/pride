@@ -181,6 +181,7 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
             history: [],
             stats: {}
           })
+          void dispatch('randomizeFlag')
           void dispatch('setTimer', true)
           break
         case 'GAMEOVER': //* GAME OVER STATE ----------------------------------
