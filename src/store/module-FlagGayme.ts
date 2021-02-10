@@ -246,7 +246,7 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
 
       // Check if all Flags have been correctly answered
       if (getters.filteredFlags.length === 0) {
-        commit('setGameState', 'GAMEOVER')
+        void dispatch('setGameState', 'GAMEOVER')
         return
       }
 
