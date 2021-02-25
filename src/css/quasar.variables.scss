@@ -16,7 +16,13 @@ $primary   : #3e8ddb;
 $secondary : #bb65b4;
 $accent    : #9C27B0;
 
-$dark      : #1D1D1D;
+//*---------------------------------------------------------*//
+// MONOCRHOMATIC COLORS ------------------------------------ //
+$black: #181A21;
+$darkgray: lighten($black, 10%);
+$midgray: lighten($black, 25%);
+$lightgray: lighten($black, 60%);
+$white: #FFFFFF;
 
 $positive  : #2aeb57;
 $negative  : #C10015;
