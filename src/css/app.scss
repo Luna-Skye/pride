@@ -1,1 +1,10 @@
 // app global css in SCSS form
+body.body--dark {
+  background: $black;
+}
+
+.bg-black     { background: $black !important; }
+.bg-darkgray  { background: $darkgray; }
+.bg-midgray   { background: $midgray; }
+.bg-lightgray { background: $lightgray; }
+.bg-white     { background: $white; }

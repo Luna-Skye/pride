@@ -1,11 +1,11 @@
 <template>
   <q-page class="relative row items-center justify-evenly">
-    <div id="debug-panel" class="absolute-top-left">
+    <DebugMenu>
       <pre>{{ $store.state.FlagGayme.gameState }}</pre>
       <pre>{{ $store.state.FlagGayme.inputName }}</pre>
       <pre>{{ $store.state.FlagGayme.current }}</pre>
       <pre>{{ $store.getters['FlagGayme/difficulty'] }}</pre>
-    </div>
+    </DebugMenu>
 
     <!-- MAIN MENU -->
     <div id="main-menu" v-if="$store.state.FlagGayme.gameState === 'MAINMENU'">
@@ -65,12 +65,13 @@
 <script lang="ts">
 import { mapGetters } from 'vuex'
 
+import DebugMenu from '../components/DebugMenu.vue'
 import FlagDisplay from '../components/FlagDisplay.vue'
 
 import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'PagePlay',
-  components: { FlagDisplay },
+  components: { DebugMenu, FlagDisplay },
   data () {
     return {
       flagNameInput: ''
