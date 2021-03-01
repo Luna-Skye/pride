@@ -20,6 +20,19 @@
 
     <!-- ONGOING GAME -->
     <div id="ongoing" v-if="$store.state.FlagGayme.gameState === 'ONGOING'">
+      <!-- SCORE/TIME DISPLAY -->
+      <div class="row">
+        <div class="col">
+          <p class="text-caption q-mb-none">Base Score:</p>
+          <p class="text-h5 q-mt-none">{{ $store.state.FlagGayme.current.score }}</p>
+        </div>
+        <div class="col">
+          <p class="text-caption q-mb-none text-right">Time Remaining:</p>
+          <p class="text-h5 q-mt-none text-right">{{ $store.state.FlagGayme.current.time }}</p>
+        </div>
+      </div>
+
+      <!-- FLAG RENDERER -->
       <FlagDisplay :flag="getFlag($store.state.FlagGayme.current.flag)" />
 
       <!-- INPUT -->
