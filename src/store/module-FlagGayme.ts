@@ -10,8 +10,9 @@ import { StateInterface } from './index'
 //* -----------------------------------------------------------
 //  MODULE STATE INTERFACE ------------------------------------
 export type GameState = 'MAINMENU' | 'ONGOING' | 'GAMEOVER' | 'LEADERBOARD'
+export type GameDifficulties = 'EASY' | 'NORMAL' | 'HARD' | 'NIGHTMARE' | 'TEST'
 export type GameCurrent = {
-  difficulty: 'EASY' | 'NORMAL' | 'HARD' | 'NIGHTMARE' | 'TEST';
+  difficulty: GameDifficulties;
   flag: string;
   score: number;
   time: number;
@@ -28,6 +29,7 @@ export interface NullableDifficulty {
   ScoreOnSuccess?: number;
   ScoreOnFail?: number;
   ScorePerSec?: number;
+  TotalHints?: number;
   Flags?: string[];
 }
 export interface Difficulty extends NullableDifficulty {
@@ -37,7 +39,7 @@ export interface Difficulty extends NullableDifficulty {
   ScoreOnSuccess: number;
   ScoreOnFail: number;
   ScorePerSec: number;
-  Flags?: string[];
+  TotalHints: number;
 }
 export type AnswerPayload = {
   flag: string;
@@ -70,7 +72,7 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
 
       //* Ongoing Game Values
       current: {
-        difficulty: 'NIGHTMARE',
+        difficulty: 'NORMAL',
         flag: 'Progress',
         score: 0,
         time: 90,
@@ -86,16 +88,25 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
           TimeOnFail: -5,
           ScoreOnSuccess: 10,
           ScoreOnFail: -5,
-          ScorePerSec: 1.5
+          ScorePerSec: 1.5,
+          TotalHints: 1
         },
         list: {
           EASY: {
             Flags: ['Progress', 'Transgender', 'Nonbinary', 'Gay Male', 'Lesbian', 'Bisexual', 'Pansexual']
           },
           NORMAL: {
+            TotalHints: 3,
             Flags: ['Progress', 'Transgender', 'Transfem', 'Transmasc', 'Demigirl', 'Demiboy', 'Aromantic', 'Asexual', 'Agender', 'Nonbinary', 'Gay Male', 'Lesbian', 'Bisexual', 'Pansexual']
           },
-          NIGHTMARE: {},
+          HARD: {
+            TotalHints: 4
+          },
+          NIGHTMARE: {
+            StartTime: 120,
+            TimeOnSuccess: 5,
+            TotalHints: 5
+          },
           TEST: {
             StartTime: 1200,
             TimeOnSuccess: 120,
@@ -114,6 +125,9 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
         _.cloneDeep(state.difficulty.list[state.current.difficulty]),
         _.cloneDeep(state.difficulty.global)
       )
+    },
+    difficulties (state): GameDifficulties[] {
+      return Object.keys(state.difficulty.list) as GameDifficulties[]
     },
 
     //* CURRENT FLAG INFO -----------------------------------------------------
@@ -151,6 +165,7 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
     //  Managing GameState & Current Values -----------------------------------
     setGameState (state, payload: GameState): void { state.gameState = payload },
     setCurrent (state, payload: GameCurrent): void { state.current = payload },
+    setDifficulty (state, payload: GameDifficulties): void { state.current.difficulty = payload },
 
     //* SET FLAG BY STRING ----------------------------------------------------
     //  Set Current Flag to Defined String ------------------------------------
@@ -205,6 +220,9 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
 
       // Commit GameState to Store
       commit('setGameState', newState)
+    },
+    setDifficulty ({ commit }, difficulty: GameDifficulties) {
+      commit('setDifficulty', difficulty)
     },
 
     //* SET GAMETIMER ---------------------------------------------------------
