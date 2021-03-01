@@ -8,18 +8,38 @@
     </DebugMenu>
 
     <!-- MAIN MENU -->
-    <div id="main-menu" v-if="$store.state.FlagGayme.gameState === 'MAINMENU'">
+    <div
+      id="main-menu"
+      v-if="$store.state.FlagGayme.gameState === 'MAINMENU'"
+      class="q-gutter-y-md"
+      style="min-width: 256px;"
+    >
+      <!-- DIFFICULTY SELECTOR -->
+      <q-select
+        class="row"
+        square outlined
+        label="Difficulty"
+        :model-value="$store.state.FlagGayme.current.difficulty"
+        @update:modelValue="$store.dispatch('FlagGayme/setDifficulty', $event)"
+        :options="$store.getters['FlagGayme/difficulties']"
+      />
+
+      <!-- START BUTTON -->
       <q-btn
         color="positive"
         size="lg"
         outline
-        class="no-border-radius"
+        class="row no-border-radius full-width"
         @click="startGame"
       >START GAYME</q-btn>
     </div>
 
     <!-- ONGOING GAME -->
-    <div id="ongoing" v-if="$store.state.FlagGayme.gameState === 'ONGOING'" class="q-gutter-md">
+    <div
+      id="ongoing"
+      v-if="$store.state.FlagGayme.gameState === 'ONGOING'"
+      class="q-gutter-y-md"
+    >
       <!-- SCORE/TIME DISPLAY -->
       <div class="row">
         <div class="col">
@@ -67,7 +87,10 @@
     </div>
 
     <!-- GAME OVER -->
-    <div id="game-over" v-if="$store.state.FlagGayme.gameState === 'GAMEOVER'">
+    <div
+      id="game-over"
+      v-if="$store.state.FlagGayme.gameState === 'GAMEOVER'"
+    >
       <p>Well done. Ya did it.</p>
       <q-btn
         color="positive"
@@ -77,7 +100,6 @@
         @click="$store.dispatch('FlagGayme/setGameState', 'MAINMENU')"
       >PLAY AGAYNE</q-btn>
     </div>
-
   </q-page>
 </template>
 
