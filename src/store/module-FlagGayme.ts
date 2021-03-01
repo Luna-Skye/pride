@@ -21,7 +21,7 @@ export type GameCurrent = {
   }[];
   stats: Record<string, string>;
 }
-export type Difficulty = {
+export interface NullableDifficulty {
   StartTime?: number;
   TimeOnSuccess?: number;
   TimeOnFail?: number;
@@ -29,6 +29,20 @@ export type Difficulty = {
   ScoreOnFail?: number;
   ScorePerSec?: number;
   Flags?: string[];
+}
+export interface Difficulty extends NullableDifficulty {
+  StartTime: number;
+  TimeOnSuccess: number;
+  TimeOnFail: number;
+  ScoreOnSuccess: number;
+  ScoreOnFail: number;
+  ScorePerSec: number;
+  Flags?: string[];
+}
+export type AnswerPayload = {
+  flag: string;
+  correct: boolean;
+  difficulty: Difficulty;
 }
 export interface FlagGaymeStateInterface {
   gameState: GameState;
@@ -38,7 +52,7 @@ export interface FlagGaymeStateInterface {
   difficulty: {
     global: Difficulty;
     list: {
-      [name: string]: Difficulty
+      [name: string]: NullableDifficulty
     };
   };
 }
@@ -56,7 +70,7 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
 
       //* Ongoing Game Values
       current: {
-        difficulty: 'EASY',
+        difficulty: 'NIGHTMARE',
         flag: 'Progress',
         score: 0,
         time: 90,
@@ -150,7 +164,7 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
     //* HANDLE SUBMITTED ANSWER -----------------------------------------------
     //  Apply Values to Game Current ------------------------------------------
     //  TODO | Define Payload Type --------------------------------------------
-    handleAnswer (state, payload: Record<string, any>): void {
+    handleAnswer (state, payload: AnswerPayload): void {
       if (payload.correct) {
         state.current.time += payload.difficulty.TimeOnSuccess
         state.current.score += payload.difficulty.ScoreOnSuccess
@@ -240,10 +254,10 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
 
       // Handle Answer Submission | Call Commits
       commit('handleAnswer', {
-        difficulty: getters.difficulty,
         flag: state.current.flag,
-        correct
-      })
+        correct,
+        difficulty: getters.difficulty
+      } as AnswerPayload)
 
       // Check if all Flags have been correctly answered
       if (getters.filteredFlags.length === 0) {
