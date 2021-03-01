@@ -19,30 +19,35 @@
     </div>
 
     <!-- ONGOING GAME -->
-    <div id="ongoing" v-if="$store.state.FlagGayme.gameState === 'ONGOING'">
+    <div id="ongoing" v-if="$store.state.FlagGayme.gameState === 'ONGOING'" class="q-gutter-md">
       <!-- SCORE/TIME DISPLAY -->
       <div class="row">
         <div class="col">
-          <p class="text-caption q-mb-none">Base Score:</p>
-          <p class="text-h5 q-mt-none">{{ $store.state.FlagGayme.current.score }}</p>
+          <p class="text-caption q-my-none">Base Score:</p>
+          <p class="text-h5 q-my-none">{{ $store.state.FlagGayme.current.score }}</p>
         </div>
         <div class="col">
-          <p class="text-caption q-mb-none text-right">Time Remaining:</p>
-          <p class="text-h5 q-mt-none text-right">{{ $store.state.FlagGayme.current.time }}</p>
+          <p class="text-caption q-my-none text-right">Time Remaining:</p>
+          <p class="text-h5 q-my-none text-right">{{ $store.state.FlagGayme.current.time }}</p>
         </div>
       </div>
 
       <!-- FLAG RENDERER -->
-      <FlagDisplay :flag="getFlag($store.state.FlagGayme.current.flag)" />
+      <div class="row">
+        <FlagDisplay :flag="getFlag($store.state.FlagGayme.current.flag)" />
+      </div>
 
       <!-- INPUT -->
-      <q-input
-        square
-        outlined
-        label="Input Flag Name"
-        v-model="flagNameInput"
-        @keypress.enter="submitAnswer($event.target.value)"
-      />
+      <div class="row">
+        <q-input
+          class="full-width"
+          square
+          outlined
+          label="Input Flag Name"
+          v-model="flagNameInput"
+          @keypress.enter="submitAnswer($event.target.value)"
+        />
+      </div>
 
       <!-- IN GAME ACTIONS -->
       <div class="row">
