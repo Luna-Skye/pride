@@ -14,7 +14,7 @@
         size="lg"
         outline
         class="no-border-radius"
-        @click="$store.dispatch('FlagGayme/setGameState', 'ONGOING')"
+        @click="startGame"
       >START GAYME</q-btn>
     </div>
 
@@ -40,9 +40,10 @@
       <!-- INPUT -->
       <div class="row">
         <q-input
-          class="full-width"
+          ref="FlagNameInput"
           square
           outlined
+          class="full-width"
           label="Input Flag Name"
           v-model="flagNameInput"
           @keypress.enter="submitAnswer($event.target.value)"
@@ -85,6 +86,7 @@ import { mapGetters } from 'vuex'
 
 import DebugMenu from '../components/DebugMenu.vue'
 import FlagDisplay from '../components/FlagDisplay.vue'
+import { QInput } from 'quasar'
 
 import { defineComponent } from 'vue'
 export default defineComponent({
@@ -100,7 +102,20 @@ export default defineComponent({
     ...mapGetters('FlagGayme', ['correctHistory'])
   },
   methods: {
+    startGame () {
+      // Dispatch GameState Change
+      void this.$store.dispatch('FlagGayme/setGameState', 'ONGOING')
+
+      // Autofocus FlagNameInput
+      setTimeout(() => {
+        // Potentially the sloppiest thing I've ever written
+        // But it does work
+        const input: QInput = (this.$refs.FlagNameInput as QInput).$el as QInput
+        input.focus()
+      }, 50)
+    },
     submitAnswer (value: string): void {
+      // Dispatch Answer Submission
       void this.$store.dispatch('FlagGayme/submitAnswer', value)
       this.flagNameInput = ''
     }
