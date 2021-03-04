@@ -17,7 +17,7 @@
       <!-- DIFFICULTY SELECTOR -->
       <q-select
         class="row"
-        square outlined
+        square filled
         label="Difficulty"
         :model-value="$store.state.FlagGayme.current.difficulty"
         @update:modelValue="$store.dispatch('FlagGayme/setDifficulty', $event)"
@@ -28,10 +28,10 @@
       <q-btn
         color="positive"
         size="lg"
-        outline
+        flat
         class="row no-border-radius full-width"
         @click="startGame"
-      >START GAYME</q-btn>
+      >START</q-btn>
     </div>
 
     <!-- ONGOING GAME -->
@@ -61,8 +61,7 @@
       <div class="row">
         <q-input
           ref="FlagNameInput"
-          square
-          outlined
+          square filled
           class="full-width"
           label="Input Flag Name"
           v-model="flagNameInput"
@@ -132,15 +131,65 @@ export default defineComponent({
       setTimeout(() => {
         // Potentially the sloppiest thing I've ever written
         // But it does work
-        const input: QInput = (this.$refs.FlagNameInput as QInput).$el as QInput
-        input.focus()
+        const inputEl: HTMLElement = (this.$refs.FlagNameInput as QInput).$el as HTMLElement
+        inputEl.focus()
       }, 50)
     },
     submitAnswer (value: string): void {
-      // Dispatch Answer Submission
+      const inputEl: HTMLElement = (this.$refs.FlagNameInput as QInput).$el as HTMLElement
+
+      //* Dispatch Answer Submission
       void this.$store.dispatch('FlagGayme/submitAnswer', value)
+        .then((correct: boolean) => {
+          const className = correct ? 'answer-true' : 'answer-false'
+
+          //* Animation Classes
+          inputEl.classList.add(className) // Add
+          setTimeout(() => { // Remove
+            if (this.$store.state.FlagGayme.gameState !== 'ONGOING') return
+            inputEl.classList.remove(className)
+          }, 800)
+        })
+
+      //* Clear Input Field
       this.flagNameInput = ''
     }
   }
 })
 </script>
+
+<style lang="scss">
+//* -----------------------------------------------------------
+//* INPUT ANSWER ANIMATION ------------------------------------
+// TODO | Add toggleable "Simple" anims (just border fades)
+@keyframes answerAnim {
+  0% {
+    transform: translate(-50%, -50%) scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2, 0);
+    opacity: 0;
+  }
+}
+
+//* Input Answer Globals
+.answer-true, .answer-false {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    animation: answerAnim 0.3s ease-out;
+  }
+}
+
+//* Input Answer - Correct
+.answer-true::after { background: $positive; }
+//* Input Answer - Incorrect
+.answer-false::after { background: $negative; }
+</style>

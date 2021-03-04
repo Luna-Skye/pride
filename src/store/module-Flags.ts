@@ -224,13 +224,13 @@ const ModuleFlags: Module<FlagsStateInterface, StateInterface> = {
         },
         {
           name: 'Greysexual',
-          tags: [],
+          tags: ['graysexual', 'grace', 'gray ace'],
           type: 'sexuality',
           elements: ['#760095', '#AEA4AD', '#F6EFF7', '#AEA4AD', '#760095']
         },
         {
           name: 'Greyromantic',
-          tags: [],
+          tags: ['grayromantic', 'gray aro'],
           type: 'romantic',
           elements: ['#087D13', '#AEA4AD', '#F6EFF7', '#AEA4AD', '#087D13']
         }

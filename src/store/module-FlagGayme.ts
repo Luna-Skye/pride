@@ -263,7 +263,7 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
 
     //* SUBMIT ANSWER ---------------------------------------------------------
     //  Check if Input Name is Correct & Call Respective Commits --------------
-    submitAnswer ({ state, commit, dispatch, getters }, value: string): void {
+    submitAnswer ({ state, commit, dispatch, getters }, value: string): boolean {
       // Check If Answer is Correct
       const correct = (
         _.lowerCase(value) === _.lowerCase(getters.flag.name) ||
@@ -280,11 +280,14 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
       // Check if all Flags have been correctly answered
       if (getters.filteredFlags.length === 0) {
         void dispatch('setGameState', 'GAMEOVER')
-        return
+        return false
       }
 
       // Call for New Random Flag
       void dispatch('randomizeFlag')
+
+      // Return Correct Boolean
+      return correct
     }
   }
 }
