@@ -60,6 +60,10 @@ export interface FlagGaymeStateInterface {
 }
 
 //* -----------------------------------------------------------
+//  LOCAL UTILITIES -------------------------------------------
+function cleanAnswer (val: string): string { return _.lowerCase(val.replace(/[\s_-]/g, '')) }
+
+//* -----------------------------------------------------------
 //  MODULE STATE DATA -----------------------------------------
 const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
   namespaced: true,
@@ -178,7 +182,6 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
 
     //* HANDLE SUBMITTED ANSWER -----------------------------------------------
     //  Apply Values to Game Current ------------------------------------------
-    //  TODO | Define Payload Type --------------------------------------------
     handleAnswer (state, payload: AnswerPayload): void {
       if (payload.correct) {
         state.current.time += payload.difficulty.TimeOnSuccess
@@ -266,8 +269,8 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
     submitAnswer ({ state, commit, dispatch, getters }, value: string): boolean {
       // Check If Answer is Correct
       const correct = (
-        _.lowerCase(value) === _.lowerCase(getters.flag.name) ||
-        _.includes(getters.flag.tags, _.lowerCase(value))
+        cleanAnswer(value) === cleanAnswer(getters.flag.name) ||
+        _.includes(getters.flag.tags, cleanAnswer(value))
       )
 
       // Handle Answer Submission | Call Commits
