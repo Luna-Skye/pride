@@ -11,17 +11,6 @@ import { StateInterface } from './index'
 //  MODULE STATE INTERFACE ------------------------------------
 export type GameState = 'MAINMENU' | 'ONGOING' | 'GAMEOVER' | 'LEADERBOARD'
 export type GameDifficulties = 'EASY' | 'NORMAL' | 'HARD' | 'NIGHTMARE' | 'TEST'
-export type GameCurrent = {
-  difficulty: GameDifficulties;
-  flag: string;
-  score: number;
-  time: number;
-  history: {
-    flag: string;
-    correct: boolean;
-  }[];
-  stats: Record<string, string>;
-}
 export interface NullableDifficulty {
   StartTime?: number;
   TimeOnSuccess?: number;
@@ -31,6 +20,7 @@ export interface NullableDifficulty {
   ScorePerSec?: number;
   TotalHints?: number;
   Flags?: string[];
+  FlagsAsBlacklist?: boolean;
 }
 export interface Difficulty extends NullableDifficulty {
   StartTime: number;
@@ -40,6 +30,17 @@ export interface Difficulty extends NullableDifficulty {
   ScoreOnFail: number;
   ScorePerSec: number;
   TotalHints: number;
+  FlagsAsBlacklist: boolean;
+}
+export type GameCurrent = {
+  difficulty: GameDifficulties;
+  flag: string;
+  score: number;
+  time: number;
+  history: {
+    flag: string;
+    correct: boolean;
+  }[];
 }
 export type AnswerPayload = {
   flag: string;
@@ -80,20 +81,20 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
         flag: 'Progress',
         score: 0,
         time: 90,
-        history: [],
-        stats: {}
+        history: []
       },
 
       //* Difficulty Values
       difficulty: {
         global: {
-          StartTime: 90,
-          TimeOnSuccess: 15,
+          StartTime: 60,
+          TimeOnSuccess: 10,
           TimeOnFail: -5,
           ScoreOnSuccess: 10,
           ScoreOnFail: -5,
-          ScorePerSec: 1.5,
-          TotalHints: 1
+          ScorePerSec: 0.25,
+          TotalHints: 1,
+          FlagsAsBlacklist: false
         },
         list: {
           EASY: {
@@ -104,12 +105,16 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
             Flags: ['Progress', 'Transgender', 'Transfem', 'Transmasc', 'Demigirl', 'Demiboy', 'Aromantic', 'Asexual', 'Agender', 'Nonbinary', 'Gay Male', 'Lesbian', 'Bisexual', 'Pansexual']
           },
           HARD: {
-            TotalHints: 4
+            TotalHints: 4,
+            FlagsAsBlacklist: true,
+            Flags: ['Progress', 'Genderflor']
           },
           NIGHTMARE: {
-            StartTime: 120,
+            StartTime: 90,
             TimeOnSuccess: 5,
-            TotalHints: 5
+            TotalHints: 5,
+            FlagsAsBlacklist: true,
+            Flags: ['Genderfaunet', 'Genderfaer', 'Genderfloren', 'Genderfloret', 'Genderflorer']
           },
           TEST: {
             StartTime: 1200,
@@ -126,8 +131,8 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
     //  Returns Current Difficulty Merged with Global Vals --------------------
     difficulty (state): Difficulty {
       return _.merge(
-        _.cloneDeep(state.difficulty.list[state.current.difficulty]),
-        _.cloneDeep(state.difficulty.global)
+        _.cloneDeep(state.difficulty.global),
+        _.cloneDeep(state.difficulty.list[state.current.difficulty])
       )
     },
     difficulties (state): GameDifficulties[] {
@@ -144,7 +149,6 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
 
     //* CORRECT HISTORY FLATMAP -----------------------------------------------
     //  Returns Flat Correct History SET | Used for FilteredFlags -------------
-    // ?Maybe Refactor the Name of this Getter --------------------------------
     correctHistory (state): string[] {
       return _.map(
         state.current.history.filter((el: Record<string, string|boolean>) => el.correct),
@@ -155,11 +159,16 @@ const ModuleFlagGayme: Module<FlagGaymeStateInterface, StateInterface> = {
     //* FILTERED FLAGS | Difficulty/History -----------------------------------
     //  Returns FlagList of Unanswered/Incorrect Flags within Difficulty ------
     filteredFlags (state, getters, rootState): Flag[] {
+      // If no flags defined, return all
+      if (!getters.difficulty.Flags) return rootState.Flags.list
+
       return rootState.Flags.list.filter((flag: Flag) => {
-        return !_.includes(getters.correctHistory, flag.name) && (
-          getters.difficulty.Flags
-            ? _.includes(getters.difficulty.Flags, flag.name)
-            : true)
+        const includes = _.includes(getters.difficulty.Flags, flag.name)
+        return (
+          getters.difficulty.FlagsAsBlacklist
+            ? !includes
+            : includes
+        ) && !_.includes(getters.correctHistory, flag.name)
       })
     }
   },

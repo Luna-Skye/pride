@@ -1,10 +1,33 @@
 <template>
   <q-page class="relative row items-center justify-evenly">
     <DebugMenu>
+      <q-list>
+        <!-- GAME STATE -->
+        <q-expansion-item
+          icon="sports_esports"
+          label="Game State"
+        >
       <pre>{{ $store.state.FlagGayme.gameState }}</pre>
       <pre>{{ $store.state.FlagGayme.inputName }}</pre>
       <pre>{{ $store.state.FlagGayme.current }}</pre>
+        </q-expansion-item>
+
+        <!-- DIFFICULTY -->
+        <q-expansion-item
+          icon="extension"
+          label="Difficulty Settings"
+        >
       <pre>{{ $store.getters['FlagGayme/difficulty'] }}</pre>
+        </q-expansion-item>
+
+        <!-- FILTERED FLAGS -->
+        <q-expansion-item
+          icon="flag"
+          label="Difficulty Flags"
+        >
+          <pre>{{ flatFilteredFlags }}</pre>
+        </q-expansion-item>
+      </q-list>
     </DebugMenu>
 
     <!-- MAIN MENU -->
@@ -105,6 +128,8 @@
 <script lang="ts">
 import { mapGetters } from 'vuex'
 
+import _ from 'lodash'
+import { Flag } from '../store/module-Flags'
 import DebugMenu from '../components/DebugMenu.vue'
 import FlagDisplay from '../components/FlagDisplay.vue'
 import { QInput } from 'quasar'
@@ -119,8 +144,12 @@ export default defineComponent({
     }
   },
   computed: {
+    flatFilteredFlags (): string[] {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return _.map(this.$store.getters['FlagGayme/filteredFlags'] as Flag[], 'name')
+    },
     ...mapGetters('Flags', ['getFlag']),
-    ...mapGetters('FlagGayme', ['correctHistory'])
+    ...mapGetters('FlagGayme', ['correctHistory', 'statistics'])
   },
   methods: {
     startGame () {
@@ -129,8 +158,6 @@ export default defineComponent({
 
       // Autofocus FlagNameInput
       setTimeout(() => {
-        // Potentially the sloppiest thing I've ever written
-        // But it does work
         const inputEl: HTMLElement = (this.$refs.FlagNameInput as QInput).$el as HTMLElement
         inputEl.focus()
       }, 50)

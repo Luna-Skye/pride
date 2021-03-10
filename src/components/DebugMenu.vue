@@ -1,7 +1,7 @@
 <template>
 <div
   v-if="devMode"
-  class="debug-menu absolute-top-left bg-darkgray q-pa-sm q-ma-sm row content-center"
+  class="debug-menu absolute-top-left bg-darkgray q-pa-sm q-ma-sm row"
 >
   <q-btn
     :icon="expanded ? 'close' : 'api'"
@@ -36,3 +36,11 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss">
+.debug-menu {
+  max-width: 320px;
+  max-height: calc(100% - 16px);
+  overflow: hidden auto;
+}
+</style>
